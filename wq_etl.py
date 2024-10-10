@@ -25,6 +25,18 @@ def transform_wq_data(
     new_cols_dict: dict,
     data: pl.DataFrame,
 ):
+    """
+    This takes water quality data downloaded from the BSK client portal in .csv
+    format and transforms into a .parquet file ready to loading
+
+    Args:
+        cols_to_drop: list, contains columns that aren't needed
+        new_cols_in_order: list, contains columns in correct order for
+            eventual loading
+        new_file: str, path of parquet file created at end of function
+        new_cols_dict: dict, contains dictionary where keys are the old column
+        names and values are the new column names
+    """
     data = data.rename(new_cols_dict).with_columns(
         pl.lit((datetime.today())).alias("date_added")
     )
@@ -42,6 +54,16 @@ def transform_wq_data(
 
 
 def fix_well_name(data: pl.DataFrame) -> pl.DataFrame:
+    """
+    Takes water quality data and transforms the well numbers to match
+    up with their actual values
+
+    Args:
+        data: pl.DataFrame, water quality data with original state well number values
+
+    Returns:
+        data: pl.DataFrame, water quality data with fixed state well number values
+    """
     data = data.with_columns(
         pl.when(pl.col("state_well_number").str.contains("-"))
         .then(pl.col("state_well_number").str.replace_all(" ", ""))
@@ -70,6 +92,7 @@ def fix_well_name(data: pl.DataFrame) -> pl.DataFrame:
 
 
 if __name__ == "__main__":
+    # yaml contains column variables for use in different functions
     wq_yml = load(open("columns_vars.yaml", "r"), Loader)
 
     new_file = f"data_dump/bsk_cleaned_data_{date.today()}.parquet"
