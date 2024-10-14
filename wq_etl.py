@@ -110,7 +110,7 @@ if __name__ == "__main__":
         "--------------- Water Quality ETL ran on %s ----------------"
         % (datetime.today())
     )
-    # yaml contains column variables for use in different functions
+
     etl_yaml = load(open("yaml/etl_variables.yaml", "r"), Loader)
     logger.info("Loaded etl_variables.yaml")
 
@@ -153,4 +153,4 @@ if __name__ == "__main__":
         os.rename(
             new_file_path, "loaded_data/bsk_data_loaded_%s.parquet" % (date.today())
         )
-        # os.remove(old_file_path)
+        os.remove(raw_data_file)
