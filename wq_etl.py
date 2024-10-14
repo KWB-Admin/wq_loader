@@ -2,6 +2,19 @@ from kwb_loader import loader
 import polars as pl
 from datetime import datetime, date
 from yaml import load, Loader
+import logging, os
+
+logging.basicConfig(
+    filename="log/wq_etl.log",
+    encoding="utf-8",
+    filemode="a",
+    format="{asctime} - {levelname} - {message}",
+    style="{",
+    datefmt="%Y-%m-%d %H:%M",
+)
+
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
 
 schema = {
     "Sample.Wrk": pl.String,
@@ -21,10 +34,9 @@ schema = {
 def transform_wq_data(
     cols_to_drop: list,
     new_cols_in_order: list,
-    new_file: str,
     new_cols_dict: dict,
     data: pl.DataFrame,
-):
+) -> pl.DataFrame:
     """
     This takes water quality data downloaded from the BSK client portal in .csv
     format and transforms into a .parquet file ready to loading
@@ -33,9 +45,11 @@ def transform_wq_data(
         cols_to_drop: list, contains columns that aren't needed
         new_cols_in_order: list, contains columns in correct order for
             eventual loading
-        new_file: str, path of parquet file created at end of function
         new_cols_dict: dict, contains dictionary where keys are the old column
         names and values are the new column names
+
+    Returns:
+        data: pl.Dataframe, cleaned data
     """
     data = data.rename(new_cols_dict).with_columns(
         pl.lit((datetime.today())).alias("date_added")
@@ -48,9 +62,9 @@ def transform_wq_data(
 
     data = fix_well_name(data)
 
-    data.drop(cols_to_drop)[new_cols_in_order].with_columns(
+    return data.drop(cols_to_drop)[new_cols_in_order].with_columns(
         pl.col("sample_date").str.replace(" (.*)", "")
-    ).write_parquet(new_file)
+    )
 
 
 def fix_well_name(data: pl.DataFrame) -> pl.DataFrame:
@@ -92,20 +106,51 @@ def fix_well_name(data: pl.DataFrame) -> pl.DataFrame:
 
 
 if __name__ == "__main__":
+    logger.info(
+        "--------------- Water Quality ETL ran on %s ----------------"
+        % (datetime.today())
+    )
     # yaml contains column variables for use in different functions
-    wq_yml = load(open("columns_vars.yaml", "r"), Loader)
+    etl_yaml = load(open("yaml/etl_variables.yaml", "r"), Loader)
+    logger.info("Loaded etl_variables.yaml")
 
-    new_file = f"data_dump/bsk_cleaned_data_{date.today()}.parquet"
+    raw_data_file_paths = os.listdir("data_dump")
+
     new_cols_dict = {
-        key: wq_yml["new_cols"][ind] for ind, key in enumerate(schema.keys())
+        key: etl_yaml["new_column_names"][ind] for ind, key in enumerate(schema.keys())
     }
 
-    data = pl.read_csv("data_dump\Simple_Results__09242024_1448.csv", schema=schema)
-    transform_wq_data(
-        wq_yml["cols_to_drop"],
-        wq_yml["new_cols_in_order"],
-        new_file,
-        new_cols_dict,
-        data,
-    )
-    loader.load("kwb", "water_quality", "bsk_lab_results", new_file)
+    for raw_data_file in raw_data_file_paths:
+
+        new_file_path = f"data_dump/bsk_cleaned_data_{date.today()}.parquet"
+
+        data = pl.read_csv(source=f"data_dump/{raw_data_file}", schema=schema)
+        try:
+            data = transform_wq_data(
+                cols_to_drop=etl_yaml["columns_to_drop"],
+                new_cols_in_order=etl_yaml["new_columns_in_order"],
+                new_cols_dict=new_cols_dict,
+                data=data,
+            )
+            logger.info("Data successfully cleaned and transformed")
+        except:
+            logger.exception("..")
+
+        data.write_parquet(new_file_path)
+
+        loader.load(
+            dbname=etl_yaml["db_name"],
+            schema=etl_yaml["schema"],
+            table_name=etl_yaml["table"],
+            data_path=new_file_path,
+        )
+
+        logging.info(
+            "Successfully loaded data into %s.%s.%s \n"
+            % (etl_yaml["db_name"], etl_yaml["schema"], etl_yaml["table"])
+        )
+
+        os.rename(
+            new_file_path, "loaded_data/bsk_data_loaded_%s.parquet" % (date.today())
+        )
+        # os.remove(old_file_path)

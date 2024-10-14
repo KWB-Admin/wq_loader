@@ -1,2 +1,5 @@
-data_dump/
 .venv/
+data_dump/
+loaded_data/
+log/
+yaml/
