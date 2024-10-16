@@ -16,6 +16,10 @@ logging.basicConfig(
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 
+user = os.getenv("kwb_dw_user")
+host = os.getenv("kwb_dw_host")
+password = os.getenv("kwb_dw_password")
+
 schema = {
     "Sample.Wrk": pl.String,
     "Sample.Sample": pl.String,
@@ -139,6 +143,7 @@ if __name__ == "__main__":
         data.write_parquet(new_file_path)
 
         loader.load(
+            credentials=(user, host, password),
             dbname=etl_yaml["db_name"],
             schema=etl_yaml["schema"],
             table_name=etl_yaml["table"],
