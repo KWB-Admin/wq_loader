@@ -115,16 +115,18 @@ if __name__ == "__main__":
         % (datetime.today())
     )
 
+    if not os.listdir("data_dump"):
+        logger.info("No data is available for loading, quitting program.")
+        exit()
+
     etl_yaml = load(open("yaml/etl_variables.yaml", "r"), Loader)
     logger.info("Loaded etl_variables.yaml")
-
-    raw_data_file_paths = os.listdir("data_dump")
 
     new_cols_dict = {
         key: etl_yaml["new_column_names"][ind] for ind, key in enumerate(schema.keys())
     }
 
-    for raw_data_file in raw_data_file_paths:
+    for raw_data_file in os.listdir("data_dump"):
 
         new_file_path = f"data_dump/bsk_cleaned_data_{date.today()}.parquet"
 
