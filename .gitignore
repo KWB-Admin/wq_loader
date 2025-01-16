@@ -3,3 +3,4 @@ data_dump/
 loaded_data/
 log/
 yaml/
+__pycache__/

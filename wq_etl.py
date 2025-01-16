@@ -160,4 +160,4 @@ if __name__ == "__main__":
         os.rename(
             new_file_path, "loaded_data/bsk_data_loaded_%s.parquet" % (date.today())
         )
-        os.remove(raw_data_file)
+        os.remove("data_dump/%s" % (raw_data_file))
