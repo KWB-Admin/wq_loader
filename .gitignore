@@ -4,4 +4,4 @@ loaded_data/
 log/
 yaml/
 __pycache__/
-*.ps1
+wq_etl.ps1
