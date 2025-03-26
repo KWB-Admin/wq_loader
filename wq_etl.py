@@ -43,7 +43,7 @@ def transform_wq_data(
 ) -> pl.DataFrame:
     """
     This takes water quality data downloaded from the BSK client portal in .csv
-    format and transforms into a .parquet file ready to loading
+    format and transforms into a .parquet file ready for loading
 
     Args:
         cols_to_drop: list, contains columns that aren't needed
@@ -131,6 +131,11 @@ if __name__ == "__main__":
         new_file_path = f"data_dump/bsk_cleaned_data_{date.today()}.parquet"
 
         data = pl.read_csv(source=f"data_dump/{raw_data_file}", schema=schema)
+        data = data.filter(pl.col("Sample.SampleName").str.contains("Ketzer"))
+        if data.is_empty():
+            logger.info("Data is for Ketzer Ranch, not to be uploaded to DW")
+            os.remove("data_dump/%s" % (raw_data_file))
+            continue
         try:
             data = transform_wq_data(
                 cols_to_drop=etl_yaml["columns_to_drop"],
