@@ -6,7 +6,7 @@ import os
 user = os.getenv("kwb_dw_user")
 host = os.getenv("kwb_dw_host")
 password = os.getenv("kwb_dw_password")
-hist_pdf_table = 'eurofins_lab_results_from_pdfs'
+hist_pdf_table = "eurofins_lab_results_from_pdfs"
 
 if __name__ == "__main__":
     etl_yaml = load(open("yaml/etl_variables.yaml", "r"), Loader)
