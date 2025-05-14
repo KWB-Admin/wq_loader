@@ -1,0 +1,37 @@
+db_name: "kwb"
+schema_name: "water_quality"
+table_name: "bsk_lab_results"
+primary_key: "state_well_number,sample_timestamp,analyte"
+update_cols: ["result"]
+
+schema : {
+  report_number: str,
+  project_number: str,
+  lab: str,
+  state_well_number: str,
+  sample_timestamp: timestamp,
+  matrix: str,
+  analysis_method: str,
+  analyte: str,
+  analyzed_timestamp: timestamp,
+  minimum_detectable_limit: real,
+  minimum_reportable_limit: real,
+  result: str,
+  units: str,
+}
+
+new_col_names: {
+  Wrk: report number,
+  ProjectNumber: project_number,
+  Sample.Laboratory: lab,
+  Sample.SampleName: state_well_number,
+  Sample.Sampled: sample_timestamp,
+  Analysis.Matrix: matrix,
+  Analysis.SpecificMethod: analysis_method,
+  Analyte.Analyte: analyte,
+  Analyte.Analyzed: analyzed_timestamp,
+  Analyte.tMDL: minimum_detectable_limit,
+  Analyte.tMRL: minimum_reportable_limit,
+  Analyte.tResult: result,
+  Analyte.RptUnits: units,
+}

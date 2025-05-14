@@ -1,0 +1,118 @@
+2024-10-14 13:53 - INFO - --------------- Water Quality ETL ran on 2024-10-14 13:53:46.881641 ----------------
+2024-10-14 13:53 - INFO - Loaded etl_variables.yaml
+2024-10-14 13:53 - INFO - Data successfully cleaned and transformed
+2024-10-14 13:53 - INFO - Successfully loaded data into kwb.water_quality.bsk_lab_results 
+
+2024-10-17 14:44 - INFO - --------------- Water Quality ETL ran on 2024-10-17 14:44:22.945702 ----------------
+2024-10-17 14:44 - INFO - Loaded etl_variables.yaml
+2024-10-17 14:44 - INFO - Data successfully cleaned and transformed
+2024-10-17 14:44 - INFO - Successfully loaded data into kwb.water_quality.bsk_lab_results 
+
+2024-10-17 14:45 - INFO - --------------- Water Quality ETL ran on 2024-10-17 14:45:08.575548 ----------------
+2024-10-17 14:45 - INFO - No data is available for loading, quitting program.
+2025-01-16 14:41 - INFO - --------------- Water Quality ETL ran on 2025-01-16 14:41:50.131398 ----------------
+2025-01-16 14:41 - INFO - Loaded etl_variables.yaml
+2025-01-16 14:42 - INFO - --------------- Water Quality ETL ran on 2025-01-16 14:42:57.845292 ----------------
+2025-01-16 14:42 - INFO - Loaded etl_variables.yaml
+2025-01-16 14:42 - INFO - Data successfully cleaned and transformed
+2025-01-16 14:42 - INFO - Successfully loaded data into kwb.water_quality.bsk_lab_results 
+
+2025-01-16 14:44 - INFO - --------------- Water Quality ETL ran on 2025-01-16 14:44:03.225812 ----------------
+2025-01-16 14:44 - INFO - Loaded etl_variables.yaml
+2025-01-16 14:44 - INFO - Data successfully cleaned and transformed
+2025-01-16 14:44 - INFO - Successfully loaded data into kwb.water_quality.bsk_lab_results 
+
+2025-01-16 14:44 - INFO - --------------- Water Quality ETL ran on 2025-01-16 14:44:18.587952 ----------------
+2025-01-16 14:44 - INFO - Loaded etl_variables.yaml
+2025-01-16 14:44 - INFO - Data successfully cleaned and transformed
+2025-01-16 14:44 - INFO - Successfully loaded data into kwb.water_quality.bsk_lab_results 
+
+2025-03-26 12:58 - INFO - --------------- Water Quality ETL ran on 2025-03-26 12:58:30.610101 ----------------
+2025-03-26 12:58 - INFO - Loaded etl_variables.yaml
+2025-03-26 12:58 - INFO - Data is for Ketzer Ranch, not to be uploaded to DW
+2025-05-14 16:15 - INFO - --------------- Water Quality ETL running on 2025-05-14 16:15:02.899974 ----------------
+2025-05-14 16:15 - INFO - Loaded etl yaml.
+2025-05-14 16:15 - INFO - Data is for Ketzer Ranch, not to be uploaded to DW
+2025-05-14 16:15 - INFO - Successfully ran Water Quality ETL.
+
+2025-05-14 16:15 - INFO - --------------- Water Quality ETL running on 2025-05-14 16:15:32.050117 ----------------
+2025-05-14 16:15 - INFO - No data is available for loading, quitting program.
+
+2025-05-14 16:15 - INFO - --------------- Water Quality ETL running on 2025-05-14 16:15:40.966909 ----------------
+2025-05-14 16:15 - INFO - No data is available for loading, quitting program.
+
+2025-05-14 16:17 - INFO - --------------- Water Quality ETL running on 2025-05-14 16:17:24.530944 ----------------
+2025-05-14 16:17 - INFO - Loaded etl yaml.
+2025-05-14 16:19 - INFO - --------------- Water Quality ETL running on 2025-05-14 16:19:51.480917 ----------------
+2025-05-14 16:19 - INFO - Loaded etl yaml.
+2025-05-14 16:21 - INFO - --------------- Water Quality ETL running on 2025-05-14 16:21:00.393297 ----------------
+2025-05-14 16:21 - INFO - Loaded etl yaml.
+2025-05-14 16:21 - ERROR - 
+2025-05-14 16:21 - INFO - Successfully connected to kwb db
+2025-05-14 16:22 - INFO - --------------- Water Quality ETL running on 2025-05-14 16:22:02.412613 ----------------
+2025-05-14 16:22 - INFO - Loaded etl yaml.
+2025-05-14 16:22 - ERROR - 
+2025-05-14 16:22 - INFO - --------------- Water Quality ETL running on 2025-05-14 16:22:48.761359 ----------------
+2025-05-14 16:22 - INFO - Loaded etl yaml.
+2025-05-14 16:22 - ERROR - 
+2025-05-14 16:23 - INFO - --------------- Water Quality ETL running on 2025-05-14 16:23:12.818703 ----------------
+2025-05-14 16:23 - INFO - Loaded etl yaml.
+2025-05-14 16:23 - INFO - --------------- Water Quality ETL running on 2025-05-14 16:23:54.226372 ----------------
+2025-05-14 16:23 - INFO - Loaded etl yaml.
+2025-05-14 16:25 - INFO - --------------- Water Quality ETL running on 2025-05-14 16:25:33.622937 ----------------
+2025-05-14 16:25 - INFO - Loaded etl yaml.
+2025-05-14 16:27 - INFO - --------------- Water Quality ETL running on 2025-05-14 16:27:09.826367 ----------------
+2025-05-14 16:27 - INFO - Loaded etl yaml.
+2025-05-14 16:27 - INFO - Data successfully cleaned and transformed.
+2025-05-14 16:37 - INFO - --------------- Water Quality ETL running on 2025-05-14 16:37:19.782594 ----------------
+2025-05-14 16:37 - INFO - Loaded etl yaml.
+2025-05-14 16:37 - ERROR - 
+2025-05-14 16:37 - INFO - --------------- Water Quality ETL running on 2025-05-14 16:37:35.833369 ----------------
+2025-05-14 16:37 - INFO - Loaded etl yaml.
+2025-05-14 16:37 - INFO - --------------- Water Quality ETL running on 2025-05-14 16:37:50.417552 ----------------
+2025-05-14 16:37 - INFO - Loaded etl yaml.
+2025-05-14 16:44 - INFO - --------------- Water Quality ETL running on 2025-05-14 16:44:55.304643 ----------------
+2025-05-14 16:44 - INFO - Loaded etl yaml.
+2025-05-14 16:44 - INFO - Data successfully cleaned and transformed.
+2025-05-14 16:44 - ERROR - 
+2025-05-14 16:48 - INFO - --------------- Water Quality ETL running on 2025-05-14 16:48:01.044230 ----------------
+2025-05-14 16:48 - INFO - Loaded etl yaml.
+2025-05-14 16:48 - INFO - Data successfully cleaned and transformed.
+2025-05-14 16:48 - ERROR - 
+2025-05-14 16:48 - INFO - Successfully connected to kwb db
+2025-05-14 16:48 - INFO - --------------- Water Quality ETL running on 2025-05-14 16:48:27.463212 ----------------
+2025-05-14 16:48 - INFO - Loaded etl yaml.
+2025-05-14 16:48 - INFO - Data successfully cleaned and transformed.
+2025-05-14 16:48 - ERROR - 
+2025-05-14 16:48 - INFO - Successfully connected to kwb db
+2025-05-14 16:48 - INFO - Table exists, continue with loading.
+2025-05-14 16:48 - INFO - --------------- Water Quality ETL running on 2025-05-14 16:48:56.200309 ----------------
+2025-05-14 16:48 - INFO - Loaded etl yaml.
+2025-05-14 16:48 - INFO - Data successfully cleaned and transformed.
+2025-05-14 16:48 - ERROR - 
+2025-05-14 16:49 - INFO - --------------- Water Quality ETL running on 2025-05-14 16:49:15.736307 ----------------
+2025-05-14 16:49 - INFO - Loaded etl yaml.
+2025-05-14 16:49 - INFO - Data successfully cleaned and transformed.
+2025-05-14 16:49 - INFO - --------------- Water Quality ETL running on 2025-05-14 16:49:21.933474 ----------------
+2025-05-14 16:49 - INFO - Loaded etl yaml.
+2025-05-14 16:49 - INFO - Data successfully cleaned and transformed.
+2025-05-14 16:49 - INFO - Successfully connected to kwb db
+2025-05-14 16:49 - INFO - Table exists, continue with loading.
+2025-05-14 16:49 - INFO - --------------- Water Quality ETL running on 2025-05-14 16:49:51.943520 ----------------
+2025-05-14 16:49 - INFO - Loaded etl yaml.
+2025-05-14 16:49 - INFO - Data successfully cleaned and transformed.
+2025-05-14 16:49 - INFO - Successfully connected to kwb db
+2025-05-14 16:49 - INFO - Table exists, continue with loading.
+2025-05-14 16:50 - INFO - --------------- Water Quality ETL running on 2025-05-14 16:50:01.176561 ----------------
+2025-05-14 16:50 - INFO - Loaded etl yaml.
+2025-05-14 16:50 - INFO - Data successfully cleaned and transformed.
+2025-05-14 16:50 - INFO - Successfully connected to kwb db
+2025-05-14 16:50 - INFO - Table exists, continue with loading.
+2025-05-14 16:50 - INFO - --------------- Water Quality ETL running on 2025-05-14 16:50:33.106505 ----------------
+2025-05-14 16:50 - INFO - Loaded etl yaml.
+2025-05-14 16:50 - INFO - Data successfully cleaned and transformed.
+2025-05-14 16:50 - INFO - Successfully connected to kwb db
+2025-05-14 16:50 - INFO - Table exists, continue with loading.
+2025-05-14 16:50 - INFO - Data was successfully loaded to kwb.water_quality.bsk_lab_results
+2025-05-14 16:50 - INFO - Successfully ran Water Quality ETL.
+

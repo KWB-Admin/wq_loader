@@ -1,7 +1,5 @@
 .venv/
 data_dump/
 loaded_data/
-log/
-yaml/
 __pycache__/
 wq_etl.ps1

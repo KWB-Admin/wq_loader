@@ -22,44 +22,21 @@ user = os.getenv("kwb_dw_user")
 host = os.getenv("kwb_dw_host")
 password = os.getenv("kwb_dw_password")
 
-polars_schema = {
-    "Sample.Wrk": pl.String,
-    "Sample.Sample": pl.String,
-    "Sample.SampleName": pl.String,
-    "Sample.LogMatrix": pl.String,
-    "Sample.Sampled": pl.String,
-    "Analyte.Analysis": pl.String,
-    "Analyte.Analyte": pl.String,
-    "Analyte.tMDL": pl.Float64,
-    "Analyte.tMRL": pl.Float64,
-    "Analyte.tResult": pl.String,
-    "Analyte.RptUnits": pl.String,
-}
 
-
-def transform_wq_data(
-    cols_to_drop: list,
-    new_cols_in_order: list,
-    new_cols_dict: dict,
-    data: pl.DataFrame,
-) -> pl.DataFrame:
+def transform_wq_data(data: pl.DataFrame, etl_yaml: dict) -> pl.DataFrame:
     """
     This takes water quality data downloaded from the BSK client portal in .csv
-    format and transforms into a .parquet file ready for loading
+    format and transforms it into a file ready for loading
 
     Args:
-        cols_to_drop: list, contains columns that aren't needed
-        new_cols_in_order: list, contains columns in correct order for
-            eventual loading
-        new_cols_dict: dict, contains dictionary where keys are the old column
-        names and values are the new column names
-
+        data: pl.DataFrame, uncleaned/untrasformed data
+        etl_yaml: dict, variables used for cleaning
     Returns:
         data: pl.Dataframe, cleaned data
     """
     try:
-        data = data.rename(new_cols_dict).with_columns(
-            pl.lit((datetime.today())).alias("date_added")
+        data = data.select([col for col in etl_yaml["new_col_names"].keys()]).rename(
+            etl_yaml["new_col_names"]
         )
         data = data.filter(
             (~pl.col("state_well_number").str.contains("Field Blank"))
@@ -68,10 +45,15 @@ def transform_wq_data(
         ).drop_nulls("result")
 
         data = fix_well_name(data)
-        logger.info("Data successfully cleaned and transformed")
-        return data.drop(cols_to_drop)[new_cols_in_order].with_columns(
-            pl.col("sample_date").str.replace(" (.*)", "")
-        )
+        for key, val in etl_yaml["schema"].items():
+            if val == "timestamp":
+                data = data.with_columns(
+                    pl.col(key).str.to_datetime("%m/%d/%Y %I:%M:%S %p")
+                )
+            elif val == "real":
+                data = data.with_columns(pl.col(key).cast(pl.Float64))
+        logger.info("Data successfully cleaned and transformed.")
+        return data
     except:
         logging.error("")
 
@@ -111,7 +93,7 @@ def fix_well_name(data: pl.DataFrame) -> pl.DataFrame:
         .otherwise(pl.col("state_well_number")),
     )
 
-    return data
+    return data.drop("len")
 
 
 def get_pg_connection(db_name: str) -> pg.extensions.connection:
@@ -136,9 +118,7 @@ def get_pg_connection(db_name: str) -> pg.extensions.connection:
         logging.error(Error)
 
 
-def check_table_exists(
-    con: pg.extensions.connection, schema_name: str, table_name: str
-):
+def check_table_exists(con: pg.extensions.connection, etl_yaml: dict):
     """
     This tests a to ensure the table we'll be writing to exists in
     the postgres schema provided.
@@ -146,8 +126,7 @@ def check_table_exists(
     Args:
         con: pg.extensions.connection, psycopg connection to pg
             database
-        schema_name: str, name of postgres schema
-        table_name: str, name of table
+        etl_yaml: dict, variables used for cleaning
     """
     cur = con.cursor()
     command = sql.SQL(
@@ -155,8 +134,8 @@ def check_table_exists(
         Select * from {schema_name}.{table_name} limit 1  
         """
     ).format(
-        schema_name=sql.Identifier(schema_name),
-        table_name=sql.Identifier(table_name),
+        schema_name=sql.Identifier(etl_yaml["schema_name"]),
+        table_name=sql.Identifier(etl_yaml["table_name"]),
     )
     try:
         cur.execute(command)
@@ -175,7 +154,7 @@ def load_data_into_pg_warehouse(data: pl.DataFrame, etl_yaml: dict):
         etl_yaml: dict, general variables for the etl process
     """
     con = get_pg_connection(etl_yaml["db_name"])
-    check_table_exists(con, etl_yaml["db_name"], etl_yaml["table_name"])
+    check_table_exists(con, etl_yaml)
     try:
         cur = con.cursor()
         for row in data.to_numpy():
@@ -184,13 +163,12 @@ def load_data_into_pg_warehouse(data: pl.DataFrame, etl_yaml: dict):
         cur.close()
         con.close()
         logging.info(
-            "Data was successfully loaded to %s.%s"
-            % (etl_yaml["db_name"], etl_yaml["table_name"])
+            "Data was successfully loaded to %s.%s.%s"
+            % (etl_yaml["db_name"], etl_yaml["schema_name"], etl_yaml["table_name"])
         )
-    except:
+    except pg.OperationalError as Error:
         con.close()
-        logging.error("Error occurred during loading.")
-    return
+        logging.error(Error)
 
 
 def build_load_query(data: ndarray, etl_yaml: dict) -> pg.sql.Composed:
@@ -204,68 +182,58 @@ def build_load_query(data: ndarray, etl_yaml: dict) -> pg.sql.Composed:
         pg.sql.Composed, Upsert query used to load data
     """
     col_names = sql.SQL(", ").join(
-        sql.Identifier(col) for col in etl_yaml["new_columns_in_order"]
+        sql.Identifier(col) for col in etl_yaml["schema"].keys()
     )
     values = sql.SQL(" , ").join(sql.Literal(val) for val in data)
+    update_cols = sql.SQL(" , ").join(
+        sql.SQL(f"{col} = Excluded.{col}") for col in etl_yaml["update_cols"]
+    )
     return sql.SQL(
         """
-        INSERT INTO {schema_name}.{table} ({col_names}) VALUES ({values})
-        ON CONFLICT {prim_key} DO UPDATE SET {update_col} = Excluded.{update_col}, edited_on = current_timestamp
+        INSERT INTO {schema_name}.{table_name} ({col_names}) VALUES ({values})
+        ON CONFLICT ({prim_key}) DO UPDATE SET {update_cols}
         """
     ).format(
         schema_name=sql.Identifier(etl_yaml["schema_name"]),
-        table=sql.Identifier(etl_yaml["table"]),
+        table_name=sql.Identifier(etl_yaml["table_name"]),
         col_names=col_names,
         values=values,
-        prim_key=sql.SQL(etl_yaml["prim_key"]),
-        update_col=sql.Identifier(etl_yaml["update_col"]),
+        prim_key=sql.SQL(etl_yaml["primary_key"]),
+        update_cols=update_cols,
     )
 
 
 if __name__ == "__main__":
     logger.info(
-        "--------------- Water Quality ETL ran on %s ----------------"
+        "--------------- Water Quality ETL running on %s ----------------"
         % (datetime.today())
     )
 
     if not os.listdir("data_dump"):
-        logger.info("No data is available for loading, quitting program.")
+        logger.info("No data is available for loading, quitting program.\n")
         exit()
 
     etl_yaml = load(open("yaml/etl_variables.yaml", "r"), Loader)
-    logger.info("Loaded etl_variables.yaml")
-
-    new_cols_dict = {
-        key: etl_yaml["new_column_names"][ind]
-        for ind, key in enumerate(polars_schema.keys())
-    }
+    logger.info("Loaded etl yaml.")
 
     for raw_data_file in os.listdir("data_dump"):
 
-        new_file_path = f"data_dump/bsk_cleaned_data_{date.today()}.parquet"
+        data = pl.read_csv(
+            source=f"data_dump/{raw_data_file}", infer_schema_length=10000
+        )
 
-        data = pl.read_csv(source=f"data_dump/{raw_data_file}", schema=polars_schema)
-
-        data = data.filter(pl.col("Sample.SampleName").str.contains("Ketzer"))
+        data = data.filter(~(pl.col("Sample.SampleName").str.contains("Kretzer")))
         if data.is_empty():
             logger.info("Data is for Ketzer Ranch, not to be uploaded to DW")
             os.remove("data_dump/%s" % (raw_data_file))
             continue
 
-        data = transform_wq_data(
-            cols_to_drop=etl_yaml["columns_to_drop"],
-            new_cols_in_order=etl_yaml["new_columns_in_order"],
-            new_cols_dict=new_cols_dict,
-            data=data,
-        )
-
-        data.write_parquet(new_file_path)
+        data = transform_wq_data(data=data, etl_yaml=etl_yaml)
 
         load_data_into_pg_warehouse(data=data, etl_yaml=etl_yaml)
 
-        os.rename(
-            new_file_path, "loaded_data/bsk_data_loaded_%s.parquet" % (date.today())
-        )
+        new_file_path = f"loaded_data/bsk_data_loaded_{date.today()}.parquet"
+        data.write_parquet(new_file_path)
         os.remove("data_dump/%s" % (raw_data_file))
 
-    logging.info("Successfully Water Quality ETL.\n")
+    logging.info("Successfully ran Water Quality ETL.\n")
