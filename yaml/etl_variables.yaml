@@ -9,6 +9,7 @@ schema : {
   project_number: str,
   lab: str,
   state_well_number: str,
+  sample_id: str,
   sample_timestamp: timestamp,
   matrix: str,
   analysis_method: str,
@@ -21,9 +22,10 @@ schema : {
 }
 
 new_col_names: {
-  Wrk: report number,
+  Wrk: report_number,
   ProjectNumber: project_number,
   Sample.Laboratory: lab,
+  Sample.Sample: sample_id,
   Sample.SampleName: state_well_number,
   Sample.Sampled: sample_timestamp,
   Analysis.Matrix: matrix,

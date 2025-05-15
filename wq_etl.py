@@ -43,6 +43,17 @@ def transform_wq_data(data: pl.DataFrame, etl_yaml: dict) -> pl.DataFrame:
             & (~pl.col("state_well_number").str.contains("TB"))
             & (~pl.col("state_well_number").str.contains("TCP"))
         ).drop_nulls("result")
+        columns_in_correct_order = list(etl_yaml["schema"].keys())
+        data = (
+            data.with_columns(
+                (pl.col("report_number") + "-" + pl.col("sample_id")).alias(
+                    "sample_id_new"
+                )
+            )
+            .drop("sample_id")
+            .rename({"sample_id_new": "sample_id"})
+            .select(columns_in_correct_order)
+        )
 
         data = fix_well_name(data)
         for key, val in etl_yaml["schema"].items():

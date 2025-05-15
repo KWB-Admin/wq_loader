@@ -116,3 +116,35 @@
 2025-05-14 16:50 - INFO - Data was successfully loaded to kwb.water_quality.bsk_lab_results
 2025-05-14 16:50 - INFO - Successfully ran Water Quality ETL.
 
+2025-05-15 13:28 - INFO - --------------- Water Quality ETL running on 2025-05-15 13:28:55.482061 ----------------
+2025-05-15 13:28 - INFO - Loaded etl yaml.
+2025-05-15 13:28 - INFO - Data successfully cleaned and transformed.
+2025-05-15 13:28 - INFO - Successfully connected to kwb db
+2025-05-15 13:28 - INFO - Table exists, continue with loading.
+2025-05-15 13:28 - INFO - Data was successfully loaded to kwb.water_quality.bsk_lab_results
+2025-05-15 13:28 - INFO - Successfully ran Water Quality ETL.
+
+2025-05-15 13:39 - INFO - --------------- Water Quality ETL running on 2025-05-15 13:39:59.757223 ----------------
+2025-05-15 13:39 - INFO - Loaded etl yaml.
+2025-05-15 13:39 - ERROR - 
+2025-05-15 13:40 - INFO - --------------- Water Quality ETL running on 2025-05-15 13:40:11.512113 ----------------
+2025-05-15 13:40 - INFO - Loaded etl yaml.
+2025-05-15 13:40 - ERROR - 
+2025-05-15 13:40 - INFO - --------------- Water Quality ETL running on 2025-05-15 13:40:20.791400 ----------------
+2025-05-15 13:40 - INFO - Loaded etl yaml.
+2025-05-15 13:41 - INFO - --------------- Water Quality ETL running on 2025-05-15 13:41:14.141570 ----------------
+2025-05-15 13:41 - INFO - Loaded etl yaml.
+2025-05-15 13:42 - INFO - --------------- Water Quality ETL running on 2025-05-15 13:42:52.318737 ----------------
+2025-05-15 13:42 - INFO - Loaded etl yaml.
+2025-05-15 13:42 - INFO - Data successfully cleaned and transformed.
+2025-05-15 13:42 - INFO - Successfully connected to kwb db
+2025-05-15 13:42 - INFO - Table exists, continue with loading.
+
+2025-05-15 13:44 - INFO - --------------- Water Quality ETL running on 2025-05-15 13:44:04.605967 ----------------
+2025-05-15 13:44 - INFO - Loaded etl yaml.
+2025-05-15 13:44 - INFO - Data successfully cleaned and transformed.
+2025-05-15 13:44 - INFO - Successfully connected to kwb db
+2025-05-15 13:44 - INFO - Table exists, continue with loading.
+2025-05-15 13:44 - INFO - Data was successfully loaded to kwb.water_quality.bsk_lab_results
+2025-05-15 13:44 - INFO - Successfully ran Water Quality ETL.
+
